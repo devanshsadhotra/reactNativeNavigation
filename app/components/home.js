@@ -18,19 +18,21 @@ import {StackNavigator} from 'react-navigation';
       <View >
        <Button 
        title='Go to profile Page'
-       onPress={()=> navigate('Profile')}/>
+       onPress={()=> navigate('Profile' , {user: 'Brad'})}
+       />
       </View>
     );
   }
 }
 class ProfilePage extends React.Component{
-    static navigationOptions ={
-       title:'Chat'
-   } ;
+    static navigationOptions =({
+       title:'Profile'
+   }) ;
    render(){
+       const {params}=this.props.navigation.state;
        return(
            <View>
-           <Text> Profile </Text>
+           <Text> {params.user}'s Profile </Text>
            </View>
        )
    }
