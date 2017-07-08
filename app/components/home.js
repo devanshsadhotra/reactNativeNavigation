@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Button, TextInput, Switch
+  Button, TextInput, Switch,
+   ListView
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
 
@@ -51,15 +52,49 @@ import {StackNavigator} from 'react-navigation';
   }
 }
 class ProfilePage extends React.Component{
-    static navigationOptions =({
+     static navigationOptions =({
        title:'Profile'
    }) ;
+    constructor(){
+        super();
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.state = {
+            userdataSource: ds,
+    };
+}
+componentDidMount() {
+    this.fetchUser();
+}
+//An example of fetching remote data
+fetchUser(){
+    fetch('https://jsonplaceholder.typicode.com/todos')
+    .then((response)=>response.json())
+    .then((response)=>{
+        this.setState({
+            userdataSource:this.state.userdataSource.cloneWithRows(response)
+        });
+    });
+}
+renderRow(user , sectionId, rowId , hightlightRow){
+    return(
+    <View style={styles.row}>
+        <Text style={styles.text}>{user.title}</Text>
+    </View>
+    
+    )
+}
+   
    render(){
        const {params}=this.props.navigation.state;
        return(
            <View>
-           <Text> {params.user}'s Profile </Text>
+           <Text style={{backgroundColor:'#70d6FF'}}> {params.user}'s Profile </Text>
+            <ListView
+          dataSource={this.state.userdataSource}
+          renderRow={this.renderRow.bind(this)}
+          />
            </View>
+           
        )
    }
 }
@@ -71,4 +106,18 @@ const navigationToPages= StackNavigator({
         screen:ProfilePage
     },
 });
+const styles= StyleSheet.create({
+    row:{
+        flexDirection:'row',
+        justifyContent:'center',
+        padding: 10,
+        backgroundColor:'#f4f4f4',
+        marginBottom:3, 
+        
+    },
+    text:{
+        flex: 1,
+        fontSize: 16
+    }
+})
 AppRegistry.registerComponent('navigationToPages', () => navigationToPages);
