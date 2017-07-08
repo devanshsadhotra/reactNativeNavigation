@@ -4,11 +4,31 @@ import {
   StyleSheet,
   Text,
   View,
-  Button
+  Button, TextInput, Switch
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
 
   export default class Home extends React.Component {
+       constructor(){
+        super();
+        this.state={
+            textValue:'Brad',
+            switchValue:true
+        }
+    }
+    onChangeText(value){
+        this.setState({
+            textValue:value
+        });
+    }
+    onSubmit(){
+        console.log('input Submitted');
+    }
+    onSwitchChange(value){
+        this.setState({
+            switchValue:value
+        });
+    }
    static navigationOptions ={
        title:'Welcome'
    } ;
@@ -16,9 +36,15 @@ import {StackNavigator} from 'react-navigation';
       const {navigate}= this.props.navigation
     return (
       <View >
+       <TextInput
+           placeholder="Enter Text"
+           value={this.state.textValue}
+           onChangeText={(value)=>this.onChangeText(value)}
+           onSubmitEditing={this.onSubmit}
+           /> 
        <Button 
-       title='Go to profile Page'
-       onPress={()=> navigate('Profile' , {user: 'Brad'})}
+       title={this.state.textValue}
+       onPress={()=> navigate('Profile' , {user: this.state.textValue})}
        />
       </View>
     );
